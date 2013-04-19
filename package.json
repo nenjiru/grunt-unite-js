@@ -1,8 +1,9 @@
 {
-    "name": "grunt-unite-js",
+    "name": "unite-js",
     "version": "0.0.1",
-    "description": "Combine the js file and compress",
+    "description": "example unite-js",
     "devDependencies": {
-        "grunt": "~0.4.0"
+        "grunt": "~0.4.0",
+        "grunt-unite-js": "git://github.com/nenjiru/grunt-unite-js.git"
     }
 }
