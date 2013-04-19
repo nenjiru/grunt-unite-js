@@ -30,6 +30,6 @@ module.exports = function(grunt)
         }
     });
 
-    grunt.loadTasks('tasks');
-    //grunt.loadNpmTasks('grunt-unite-js');
+    //grunt.loadTasks('tasks');
+    grunt.loadNpmTasks('grunt-unite-js');
 };
