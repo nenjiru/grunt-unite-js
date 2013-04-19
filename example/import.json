@@ -1,0 +1,7 @@
+{
+    "files": [
+        "example/package/hello.js",
+        { "dev" : "example/dev.js" },
+        { "app" : "example/app.js" }
+    ]
+}

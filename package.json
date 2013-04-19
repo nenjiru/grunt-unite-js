@@ -1,0 +1,8 @@
+{
+    "name": "grunt-unite-js",
+    "version": "0.0.1",
+    "description": "Combine the js file and compress",
+    "devDependencies": {
+        "grunt": "~0.4.0"
+    }
+}
