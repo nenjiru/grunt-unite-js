@@ -1,14 +1,21 @@
 {
     "files": [
         {
-            "target": "./example/example.html",
+            "grunt": {
+                "taskID": "example task",
+                "target": "./example/example.html",
+                "output": "./example/bin/app.js",
+                "scriptDirectory": "./example/"
+            },
+            "html": {
+                "include": "./bin/app.js"
+            },
             "script": [
                 "src/package/hello.js",
+                "src/package/world.js",
                 { "dev" : "src/dev.js" },
                 { "app" : "src/app.js" }
-            ],
-            "include": "./bin/app.js",
-            "output": "./example/bin/app.js"
+            ]
         }
     ]
 }

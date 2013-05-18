@@ -10,8 +10,7 @@ module.exports = function(grunt)
                 config : setting
             },
             app: {
-                config : setting,
-                script_from_grunt: "./dev/src"
+                config : setting
             }
         }
     });

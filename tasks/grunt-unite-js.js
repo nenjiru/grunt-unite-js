@@ -49,7 +49,7 @@ module.exports = function(grunt)
 
         files.forEach(function (file)
         {
-            var target = file.target,
+            var target = file.grunt.target,
                 script = getIncludeFile(file.script, attach),
                 code = '';
 
@@ -63,6 +63,7 @@ module.exports = function(grunt)
 
             //output script tag
             includeToHTML(target, code);
+            grunt.log.write('complete: ' + file.grunt.taskID);
         });
     }
 
@@ -74,22 +75,22 @@ module.exports = function(grunt)
     function uniteInclude (data, attach)
     {
         var config = data.config,
-            offset = data.script_from_grunt,
             files = config.files;
 
         files.forEach(function (file)
         {
-            var target = file.target,
-                script = getIncludeFile(file.script, attach),
-                output = file.output,
-                include = file.include,
+            var script = getIncludeFile(file.script, attach),
+                directory = file.grunt.scriptDirectory,
+                target = file.grunt.target,
+                output = file.grunt.output,
+                include = file.html.include,
                 concat = '',
                 code = '';
 
             //cancat script
             script.forEach(function (src)
             {
-                concat += grunt.file.read(offset + src);
+                concat += grunt.file.read(directory + src);
             });
 
             //output
@@ -102,6 +103,7 @@ module.exports = function(grunt)
 
             //output script tag
             includeToHTML(target, code);
+            grunt.log.write('complete: ' + file.grunt.taskID);
         });
     }
 

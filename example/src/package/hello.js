@@ -1,1 +1,1 @@
-document.getElementById('message').innerHTML = 'hello unit-js!';
+document.getElementById('message').innerHTML = 'hello';
