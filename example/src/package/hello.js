@@ -1,0 +1,1 @@
+document.getElementById('message').innerHTML = 'hello unit-js!';

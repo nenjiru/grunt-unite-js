@@ -8,21 +8,19 @@ module.exports = function(grunt)
 
         switch (this.target)
         {
-            case 'dev': includeFiles(data, 'dev', false); break;
-            case 'app': includeFiles(data, 'app', true);  break;
+            case 'dev': partialInclude(data, 'dev'); break;
+            case 'app': uniteInclude(data, 'app');   break;
         }
     });
 
     /**
      * Include files
-     * @param data {Object}
+     * @param files {Object}
      * @param attach {String}
-     * @param app {Boolean}
      */
-    function includeFiles (data, attach, app)
+    function getIncludeFile (files, attach)
     {
-        var files = data.src,
-            srcfile = [];
+        var srcfile = [];
 
         files.forEach(function (file)
         {
@@ -36,61 +34,75 @@ module.exports = function(grunt)
             }
         });
 
-        if (app === true)
-        {
-            uniteInclude(srcfile);
-        }
-        else
-        {
-            partialInclude(srcfile);
-        }
+        return srcfile;
     }
 
     /**
-     * Dev mode
-     * @param files {Array.<String>} source files
+     * Partial include
+     * @param data {Object}
+     * @param attach {String}
      */
-    function partialInclude (files)
+    function partialInclude (data, attach)
     {
-        var target = data.target,
-            code   = '';
+        var config = data.config,
+            files = config.files;
 
-        code += '<!-- INCLUDE-SCRIPT -->\n';
-        files.forEach(function (src)
+        files.forEach(function (file)
         {
-            code += '<script src="'+ src +'"><\/script>\n';
-        });
-        code += '<!-- //INCLUDE-SCRIPT -->';
+            var target = file.target,
+                script = getIncludeFile(file.script, attach),
+                code = '';
 
-        //output script tag
-        includeToHTML(target, code);
+            //include scripts
+            code += '<!-- javascript -->\n';
+            script.forEach(function (src)
+            {
+                code += '<script src="'+ src +'"><\/script>\n';
+            });
+            code += '<!-- //javascript -->';
+
+            //output script tag
+            includeToHTML(target, code);
+        });
     }
 
     /**
-     * App mode
-     * @param files {Array.<String>} source files
+     * Unite include
+     * @param data {Object}
+     * @param attach {String}
      */
-    function uniteInclude (files)
+    function uniteInclude (data, attach)
     {
-        var target  = data.target,
-            output  = data.output,
-            include = data.include,
-            concat  = '',
-            code    = '';
+        var config = data.config,
+            offset = data.script_from_grunt,
+            files = config.files;
 
-        files.forEach(function (src)
+        files.forEach(function (file)
         {
-            concat += grunt.file.read(src);
+            var target = file.target,
+                script = getIncludeFile(file.script, attach),
+                output = file.output,
+                include = file.include,
+                concat = '',
+                code = '';
+
+            //cancat script
+            script.forEach(function (src)
+            {
+                concat += grunt.file.read(offset + src);
+            });
+
+            //output
+            grunt.file.write(output, concat);
+
+            //include
+            code += '<!-- javascript -->\n';
+            code += '<script src="'+ include +'"><\/script>\n';
+            code += '<!-- //javascript -->';
+
+            //output script tag
+            includeToHTML(target, code);
         });
-
-        grunt.file.write(output, concat);
-
-        code += '<!-- INCLUDE-SCRIPT -->\n';
-        code += '<script src="'+ include +'"><\/script>\n';
-        code += '<!-- //INCLUDE-SCRIPT -->';
-
-        //output script tag
-        includeToHTML(target, code);
     }
 
     /**
@@ -100,7 +112,7 @@ module.exports = function(grunt)
      */
     function includeToHTML(target, code)
     {
-        var html = grunt.file.read(target).replace(/<!-- INCLUDE-SCRIPT -->[\s\S]*<!-- \/\/INCLUDE-SCRIPT -->/m, code);
+        var html = grunt.file.read(target).replace(/<!-- javascript -->[\s\S]*<!-- \/\/javascript -->/m, code);
         grunt.file.write(target, html);
     }
 };

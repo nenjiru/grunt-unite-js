@@ -1,0 +1,14 @@
+{
+    "files": [
+        {
+            "target": "./example/example.html",
+            "script": [
+                "src/package/hello.js",
+                { "dev" : "src/dev.js" },
+                { "app" : "src/app.js" }
+            ],
+            "include": "./bin/app.js",
+            "output": "./example/bin/app.js"
+        }
+    ]
+}

@@ -1,1 +1,0 @@
-document.getElementById('message').innerHTML = 'hello coffee!';
