@@ -1,15 +1,14 @@
 module.exports = function(grunt)
 {
-    var data;
 
-    grunt.task.registerMultiTask('grunt-unite-js', 'JavaScript Compile', function()
+    grunt.task.registerMultiTask('unite-js', 'JavaScript Compile', function()
     {
-        data = this.data;
+        var options = this.options();
 
         switch (this.target)
         {
-            case 'dev': partialInclude(data, 'dev'); break;
-            case 'app': uniteInclude(data, 'app');   break;
+            case 'dev': partialInclude(options, 'dev'); break;
+            case 'app':   uniteInclude(options, 'app'); break;
         }
     });
 
@@ -39,19 +38,19 @@ module.exports = function(grunt)
 
     /**
      * Partial include
-     * @param data {Object}
+     * @param options {Object}
      * @param attach {String}
      */
-    function partialInclude (data, attach)
+    function partialInclude (options, attach)
     {
-        var config = data.config,
-            files = config.files;
+        var tasks = options.tasks;
 
-        files.forEach(function (file)
+        tasks.forEach(function (task)
         {
-            var target = file.grunt.target,
-                script = getIncludeFile(file.script, attach),
-                code = '';
+            var target  = task.grunt.target || options.grunt.target,
+                scripts = task.script || options.script,
+                script  = getIncludeFile(scripts, attach),
+                code    = '';
 
             //include scripts
             code += '<!-- javascript -->\n';
@@ -63,29 +62,28 @@ module.exports = function(grunt)
 
             //output script tag
             includeToHTML(target, code);
-            grunt.log.write('complete: ' + file.grunt.taskID);
+            grunt.log.write('complete: ' + task.grunt.taskID || options.grunt.taskID);
         });
     }
 
     /**
      * Unite include
-     * @param data {Object}
+     * @param options {Object}
      * @param attach {String}
      */
-    function uniteInclude (data, attach)
+    function uniteInclude (options, attach)
     {
-        var config = data.config,
-            files = config.files;
+        var tasks = options.tasks;
 
-        files.forEach(function (file)
+        tasks.forEach(function (task)
         {
-            var script = getIncludeFile(file.script, attach),
-                directory = file.grunt.scriptDirectory,
-                target = file.grunt.target,
-                output = file.grunt.output,
-                include = file.html.include,
-                concat = '',
-                code = '';
+            var script    = getIncludeFile(task.script || options.script, attach),
+                directory = task.grunt.scriptDirectory || options.grunt.scriptDirectory,
+                target    = task.grunt.target || options.grunt.target,
+                output    = task.grunt.output || options.grunt.output,
+                include   = task.html.include || options.html.include,
+                concat    = '',
+                code      = '';
 
             //cancat script
             script.forEach(function (src)
@@ -103,7 +101,7 @@ module.exports = function(grunt)
 
             //output script tag
             includeToHTML(target, code);
-            grunt.log.write('complete: ' + file.grunt.taskID);
+            grunt.log.write('complete: ' + task.grunt.taskID || options.grunt.taskID);
         });
     }
 

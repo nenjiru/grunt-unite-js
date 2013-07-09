@@ -1,20 +1,31 @@
 module.exports = function(grunt)
 {
-    var setting = grunt.file.readJSON('./example/src/import.json');
+    var setting = grunt.file.readJSON('./import.json');
 
     grunt.initConfig({
 
-        //js compile
-        'grunt-unite-js' : {
+        'unite-js' : {
+            options: {
+                grunt: {
+                    taskID: 'example task',
+                    target: './example/example.html',
+                    output: './example/bin/app.js',
+                    scriptDirectory: './example/'
+                },
+                html: {
+                    include: './bin/app.js'
+                }
+            },
             dev: {
-                config : setting
+                options : setting
             },
             app: {
-                config : setting
+                options : setting
             }
         }
+
     });
 
     grunt.loadTasks('tasks');
-    //grunt.loadNpmTasks('grunt-unite-js');
+
 };
