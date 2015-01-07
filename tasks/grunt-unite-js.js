@@ -3,12 +3,12 @@ module.exports = function(grunt)
 
     grunt.task.registerMultiTask('unite-js', 'JavaScript Compile', function()
     {
-        var options = this.options();
+        var options = this.data.config;
 
-        switch (this.target)
-        {
-            case 'dev': partialInclude(options, 'dev'); break;
-            case 'app':   uniteInclude(options, 'app'); break;
+        if (~this.target.indexOf('dev')) {
+            partialInclude(options, 'dev');
+        } else if ((~this.target.indexOf('app'))) {
+            uniteInclude(options, 'app');
         }
     });
 
@@ -43,7 +43,7 @@ module.exports = function(grunt)
      */
     function partialInclude (options, attach)
     {
-        var tasks = options.tasks;
+        var tasks = options.files;
 
         tasks.forEach(function (task)
         {
@@ -73,7 +73,7 @@ module.exports = function(grunt)
      */
     function uniteInclude (options, attach)
     {
-        var tasks = options.tasks;
+        var tasks = options.files;
 
         tasks.forEach(function (task)
         {
