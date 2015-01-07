@@ -3,7 +3,7 @@ module.exports = function(grunt)
 
     grunt.task.registerMultiTask('unite-js', 'JavaScript Compile', function()
     {
-        var options = this.data.config;
+        var options = this.data.options;
 
         if (~this.target.indexOf('dev')) {
             partialInclude(options, 'dev');
@@ -43,11 +43,11 @@ module.exports = function(grunt)
      */
     function partialInclude (options, attach)
     {
-        var tasks = options.files;
+        var tasks = options.tasks;
 
         tasks.forEach(function (task)
         {
-            var target  = task.grunt.target || options.grunt.target,
+            var targets = task.grunt.targets || options.grunt.targets,
                 scripts = task.script || options.script,
                 script  = getIncludeFile(scripts, attach),
                 code    = '';
@@ -61,7 +61,7 @@ module.exports = function(grunt)
             code += '<!-- //javascript -->';
 
             //output script tag
-            includeToHTML(target, code);
+            includeToHTML(targets, code);
             grunt.log.write('complete: ' + task.grunt.taskID || options.grunt.taskID);
         });
     }
@@ -73,13 +73,13 @@ module.exports = function(grunt)
      */
     function uniteInclude (options, attach)
     {
-        var tasks = options.files;
+        var tasks = options.tasks;
 
         tasks.forEach(function (task)
         {
             var script    = getIncludeFile(task.script || options.script, attach),
                 directory = task.grunt.scriptDirectory || options.grunt.scriptDirectory,
-                target    = task.grunt.target || options.grunt.target,
+                targets   = task.grunt.targets || options.grunt.targets,
                 output    = task.grunt.output || options.grunt.output,
                 include   = task.html.include || options.html.include,
                 concat    = '',
@@ -100,19 +100,25 @@ module.exports = function(grunt)
             code += '<!-- //javascript -->';
 
             //output script tag
-            includeToHTML(target, code);
+            includeToHTML(targets, code);
+            grunt.log.write('\n    create: ' + include);
             grunt.log.write('complete: ' + task.grunt.taskID || options.grunt.taskID);
         });
     }
 
     /**
      * Over write html file
-     * @param target {String}
+     * @param targets {Array.<String>}
      * @param code {String}
      */
-    function includeToHTML(target, code)
+    function includeToHTML(targets, code)
     {
-        var html = grunt.file.read(target).replace(/<!-- javascript -->[\s\S]*<!-- \/\/javascript -->/m, code);
-        grunt.file.write(target, html);
+        var html;
+        targets.forEach(function (target)
+        {
+            html = grunt.file.read(target).replace(/<!-- javascript -->[\s\S]*<!-- \/\/javascript -->/m, code);
+            grunt.file.write(target, html);
+            grunt.log.write('    write: ' + target);
+        });
     }
 };

@@ -2,13 +2,13 @@
     "tasks": [
         {
             "grunt": {
-                "taskID": "",
-                "target": "",
-                "output": "",
-                "scriptDirectory": ""
+                "taskID": "example task",
+                "targets": ["./example/example.html"],
+                "output": "./example/bin/app.js",
+                "scriptDirectory": "./example/"
             },
             "html": {
-                "include": ""
+                "include": "/bin/main.js"
             },
             "script": [
                 "src/package/hello.js",
