@@ -2,6 +2,10 @@
     "name": "grunt-unite-js",
     "version": "0.0.3",
     "description": "example unite-js",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/nenjiru/grunt-unite-js.git"
+    },
     "devDependencies": {
         "grunt": "~0.4.0",
         "grunt-unite-js": "git://github.com/nenjiru/grunt-unite-js.git"
